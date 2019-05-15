@@ -2,6 +2,9 @@
 
 Tin Foil Theremin
 by Charles Matthews
+
+Experimental version with added instrument changing function -- 
+temporarily connect ground to pin 7 to cycle through instruments.
  
  Adapted from Bare Conductive code written by Stefan Dzisiewski-Smith and Peter Krige, 
  based on code code from Nathan Seidle.
@@ -40,13 +43,16 @@ by Charles Matthews
 #include <SoftwareSerial.h>
 
 float lastProx[12];
-
+bool optionFlag = false;
+int instrumentIndex = 0;
 
 SoftwareSerial mySerial(12, 10); // Soft TX on 10, we don't use RX in this code
 
 // Touch Board Setup variables
 #define firstPin 0
 #define lastPin 11
+
+#define optionPin 7
 
 // VS1053 setup
 byte note = 0; // The MIDI note value to be played
@@ -104,6 +110,9 @@ void setup(){
   // initial data update
   MPR121.updateTouchData();
 
+  // add some options
+  pinMode(optionPin, INPUT_PULLUP);
+  
   // Reset the VS1053
   pinMode(resetMIDI, OUTPUT);
   digitalWrite(resetMIDI, LOW);
@@ -113,22 +122,39 @@ void setup(){
   
   // initialise MIDI
   setupMidi();
+  setNotes();
   
+}
+
+void setNotes(){
+  //CM2019: modifying this bit in a hurry so this will be sloppy
   for (int i = 0; i < 12; i++) {
      talkMIDI(0xB0, 0, 0x00); // Default bank GM1  
-     talkMIDI(192 + i, 73, 0);
-
- talkMIDI(176 + i, 0x07, 0); //0xB0 is channel message, set channel volume to max (127)
-  
-    noteOn(i, penta[i] - 12, 127);
- 
-  
+     talkMIDI(192 + i, instrumentIndex + 73, 0);
+     talkMIDI(176 + i, 0x07, 0); //0xB0 is channel message, set channel volume to max (127)
+     noteOn(i, allNotes[i] - 12, 127);
   }
 }
 
+void options(){
+  
+  if (!optionFlag && digitalRead(optionPin) == 0) {
+    //CM2019: modifying this bit in a hurry so this will be sloppy
+    instrumentIndex += 1;
+    instrumentIndex %=3;
+    setNotes();
+    optionFlag = false;
+  } else if (optionPin == 1){
+    optionFlag = true;
+  }
+  
+}
+
+//from 57 to 103
+
 void loop(){
   
-     
+     options();
      MPR121.updateAll();
 
 
