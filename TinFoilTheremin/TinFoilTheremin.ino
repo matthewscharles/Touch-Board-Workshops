@@ -65,6 +65,7 @@ const byte whiteNotes[] = {60, 62, 64, 65, 67, 69, 71, 72, 74, 76, 77, 79, 81};
 const byte penta[] = {60, 62, 64, 67, 69, 72, 74, 76, 79, 81, 84, 86};
 const byte allNotes[] = {60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71};
 
+const byte channels[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12};
 
 
 void setup(){
@@ -130,9 +131,9 @@ void setNotes(){
   //CM2019: modifying this bit in a hurry so this will be sloppy
   for (int i = 0; i < 12; i++) {
      talkMIDI(0xB0, 0, 0x00); // Default bank GM1  
-     talkMIDI(192 + i, instrumentIndex + 73, 0);
-     talkMIDI(176 + i, 0x07, 0); //0xB0 is channel message, set channel volume to max (127)
-     noteOn(i, allNotes[i] - 12, 127);
+     talkMIDI(192 + channels[i], instrumentIndex + 73, 0);
+     talkMIDI(176 + channels[i], 0x07, 0); //0xB0 is channel message, set channel volume to max (127)
+     noteOn(channels[i], allNotes[i] - 12, 127);
   }
 }
 
@@ -181,7 +182,7 @@ void loop(){
   // output the mapped value to the LED
 
     
-    talkMIDI(176 + i, 0x07, thisOutput); //0xB0 is channel message, set channel volume to max (127)
+    talkMIDI(176 + channels[i], 0x07, thisOutput); //0xB0 is channel message, set channel volume to max (127)
   }
   
      
