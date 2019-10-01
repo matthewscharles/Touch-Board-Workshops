@@ -6,6 +6,7 @@
  Compiler_Errors.h - avoids incorrect builds due to wrong environment
  
  Bare Conductive code written by Stefan Dzisiewski-Smith and Peter Krige.
+ Modified by Charles Matthews 2015-2019
  
  This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 
  Unported License (CC BY-SA 3.0) http://creativecommons.org/licenses/by-sa/3.0/
@@ -28,9 +29,10 @@
 	  #error Please upgrade your Arduino IDE to 1.6.6 or greater
 	#else 
 		// check that Bare Conductive Touch Board is selected in Tools -> Board
-		#if !defined(ARDUINO_AVR_BARETOUCH) || defined(IPAD_COMPAT)
-		 	#error Please select "Bare Conductive Touch Board" in the Tools -> Board menu.
-		#endif
+   //Let's drop this for now to make way for MIDI on both paths -- CM.
+//		#if !defined(ARDUINO_AVR_BARETOUCH) || defined(IPAD_COMPAT)
+//		 	#error Please select "Bare Conductive Touch Board" in the Tools -> Board menu.
+//		#endif
  	#endif
 
 #endif // COMPILER_ERRORS_H
