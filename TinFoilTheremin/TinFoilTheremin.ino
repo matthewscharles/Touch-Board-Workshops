@@ -68,6 +68,7 @@ Create some blank text files called NOTES.TXT and INSTS.TXT
 // nah - let's just make it an int array. can't be bothered to look up why this library wasn't included
 // but it's all cool
 int lastCC[12];
+int lastSensor[12];
 
 float lastProx[12];
 bool optionFlag = false;
@@ -253,7 +254,7 @@ void loop(){
     }
   }
 //quick test on analog reads -- if I've committed this, I'm a bad person.
-    for (int i = 0; i<1; i++){
+    for (int i = 0; i<6; i++){
 //      e.type = 0x08;
 //      e.m1 = analogRead(A0 + i) / 8; // control change message
 //      e.m2 = i + 102;     // select the correct controller number - you should use numbers
@@ -264,7 +265,17 @@ void loop(){
   talkMIDI(176 + channels[i], 0x07, scaled); //0xB0 is channel message, set channel volume to max (127)
   //need to work out what these objects do -- set them to pitch bend for now?
 
+  // e.m3 = (unsigned char)constrain(map(MPR121.getFilteredData(i), inputMin, inputMax, outputMin, outputMax), 0, 127);
+  if(scaled!=lastSensor[i]){ // only output a new controller value if it has changed since last time
+  e.m3 = scaled;
+  e.type = 0x08;
+  e.m1 = 0xB0; // control change message
+  e.m2 = i;     // select the correct controller number - you should use numbers
+                                              // between 102 and 119 unless you know what you are doing
+                                              // I mean, I kind of do I guess, but I like these numbers -CM
+  MIDIUSB.write(e);
     }
+}
 }
 
 
