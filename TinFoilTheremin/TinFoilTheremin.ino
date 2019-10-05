@@ -73,6 +73,9 @@ float lastProx[12];
 bool optionFlag = false;
 int instrumentIndex = 0;
 
+//set bend?
+int bendFlag = false;
+
 SoftwareSerial mySerial(12, 10); // Soft TX on 10, we don't use RX in this code
 
 // Touch Board Setup variables
@@ -235,8 +238,33 @@ void loop(){
                                                   // between 102 and 119 unless you know what you are doing
                                                   // I mean, I kind of do I guess, but I like these numbers -CM
       MIDIUSB.write(e);
+
+      //another quick test for pitch bend - shouldn't be in the main flow of things
+
+
+
+        if(bendFlag) {
+
+          talkMIDI(224+i, 0x65, constrain(e.m3 + random(0), 0, 127));
+
+
+              }
+
     }
   }
+//quick test on analog reads -- if I've committed this, I'm a bad person.
+    for (int i = 0; i<1; i++){
+//      e.type = 0x08;
+//      e.m1 = analogRead(A0 + i) / 8; // control change message
+//      e.m2 = i + 102;     // select the correct controller number - you should use numbers
+//                                                  // between 102 and 119 unless you know what you are doing
+//                                                  // I mean, I kind of do I guess, but I like these numbers -CM
+//      MIDIUSB.write(e);
+  int scaled = constrain(127 - ((analogRead(A0 + i) + 300) / 8), 0, 127);
+  talkMIDI(176 + channels[i], 0x07, scaled); //0xB0 is channel message, set channel volume to max (127)
+  //need to work out what these objects do -- set them to pitch bend for now?
+
+    }
 }
 
 
@@ -300,6 +328,22 @@ void setupMidi(){
 
   // Volume - don't comment out this code!
   talkMIDI(0xB0, 0x07, 127); //0xB0 is channel message, set channel volume to max (127)
+  for (int i = 0; i < 16; i++) {
+    talkMIDI(176 + channels[i], 0x07, 0);
+    //RPN controller
+    talkMIDI(176 + channels[i], 0x65, 00);
+  talkMIDI(176 + channels[i], 0x64, 00);
+
+  // set the semitone limits
+  talkMIDI(176 + channels[i], 0x06, 12); // 24 should give me a full octave? too much?
+
+  // set the cents limits (fine-tuning)
+  //talkMIDI(0xB0|channel, 0x26, 00);
+
+  // reset the RPN controller
+  talkMIDI(176 + channels[i], 0x65, 127);
+  talkMIDI(176 + channels[i], 0x64, 127);
+  }
 
   // ---------------------------------------------------------------------------------------------------------
   // Melodic Instruments GM1
