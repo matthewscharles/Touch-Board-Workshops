@@ -176,9 +176,9 @@ void setNotes(){
   //CM2019: modifying this bit in a hurry so this will be sloppy
   for (int i = 0; i < 12; i++) {
      talkMIDI(0xB0, 0, 0x00); // Default bank GM1
-     talkMIDI(192 + channels[i], instrumentIndex + 73, 0);
+     talkMIDI(192 + channels[i] + (i % 3), instrumentIndex + 73, 0);
      talkMIDI(176 + channels[i], 0x07, 0); //0xB0 is channel message, set channel volume to max (127)
-     noteOn(channels[i], allNotes[i] - 12, 127);
+     noteOn(channels[i], allNotes[i] - (i % 3) * 12, 127);
   }
 }
 
@@ -262,6 +262,7 @@ void loop(){
 //                                                  // I mean, I kind of do I guess, but I like these numbers -CM
 //      MIDIUSB.write(e);
   int scaled = constrain(127 - ((analogRead(A0 + i) + 300) / 8), 0, 127);
+//   talkMIDI(224+i, 0x65, constrain(scaled + random(0), 0, 127));
   talkMIDI(176 + channels[i], 0x07, scaled); //0xB0 is channel message, set channel volume to max (127)
   //need to work out what these objects do -- set them to pitch bend for now?
 
@@ -274,6 +275,7 @@ void loop(){
                                               // between 102 and 119 unless you know what you are doing
                                               // I mean, I kind of do I guess, but I like these numbers -CM
   MIDIUSB.write(e);
+  lastSensor[i] = scaled;
     }
 }
 }
