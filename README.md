@@ -7,7 +7,7 @@
 
 These activities use an Arduino sketch called TinFoilTheremin available within the repository.
 
-If you're already familiar with the Arduino platform and have a Touch Board, you can download the sketch from the green link above (or [click here to grab the entire .zip file](https://github.com/matthewscharles/Touch-Board-Workshops/archive/master.zip)).  You will also need to install the Bare Conductive package ([https://www.bareconductive.com/make/setting-up-arduino-with-your-touch-board/](available here)).
+If you're already familiar with the Arduino platform and have a Touch Board, you can download the sketch from the green link above (or [click here to grab the entire .zip file](https://github.com/matthewscharles/Touch-Board-Workshops/archive/master.zip)).  You will also need to install the Bare Conductive package, [available here](https://www.bareconductive.com/make/setting-up-arduino-with-your-touch-board/).
 
 Everyone else: please watch this space for better instructions! I'm in the process of uploading about ten years of work to GitHub, and it's taking time ;)
 
