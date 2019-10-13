@@ -1,4 +1,4 @@
-# Touch-Board-Workshops (instrumentmaker.org : Charles Matthews)
+# Touch-Board-Workshops (Charles Matthews)
 
 ![Tinfoil Theremin activity](TinFoilThereminWorkshop.png)
 
